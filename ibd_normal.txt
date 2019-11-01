@@ -1,0 +1,54 @@
+OCORRENCIA(*id_ocorrencia*, dt_ocorrencia, hr_ocorrencia, nro_ocorrencia, periodo_ocorrencia, dt_ocorrencia_feriado, dt_registro, nome_comunicante, id_emergencia, iniciados_outras_providencias, dt_primeira_obs, hr_primeira_obs, periodo_primeira_obs, id_instituicao, validado, tipo_comunicado, tipos_fontes_informacao, id_municipio, id_responsavel)
+    id_emergencia -> PLANO_EMERGENCIA
+    id_instituicao -> INSTITUICOES
+    id_municipio -> MUNICIPIO
+    id_responsavel -> RESPONSAVEL
+
+PLANO_EMERGENCIA(*id_emergencia*, plano_emergencia_acionado)
+
+INSTITUICAO(*id_instituicao*, instituicoes_atuando_local, des_instituicao_empresa)
+
+ACIDENTE(*id_acidente*, tipo_substancia, acao_inicial_tomada, ocorrencia_oleo, volume_estimado, legado)
+
+ACIDENTE_PRODUTO(*id_acidente*, *id_produto*)
+    id_acidente -> ACIDENTE
+    id_produto -> PRODUTO
+
+PRODUTO(*id_produto*, produto_nao_se_aplica, produto_perigoso, produto_nao_especificado)
+
+ACIDENTE_EVENTO(*id_acidente*, *id_evento*)
+    id_acidente -> ACIDENTE
+    id_evento -> EVENTO
+
+EVENTO(*id_evento*, tipo_evento)
+
+ACIDENTE_DANO(*id_acidente*, *id_dano*)
+    id_acidente -> ACIDENTE
+    id_dado -> DANO
+
+DANO(*id_dano*, tipos_danos_identificados)
+
+ACIDENTE_DANO(*id_acidente*, *id_origem*)
+    id_acidente -> ACIDENTE
+    id_origem -> ORIGEM
+
+ORIGEM(*id_origem*, origem)
+
+UF(*id_uf*, uf)
+
+MUNICIPIO(*id_municipio*, municipio, geom, id_uf)
+    id_uf -> UF
+
+RESPONSAVEL(*id_responsavel*, informacao_responsavel)
+
+BACIA_SEDIMENTAR(*id_bacia_sedimentar*, bacia_sedimentar, informacao_geografica, situacao_atual_descarga)
+
+ACIDENTE_BACIA(*id_bacia_sedimentar*, *id_acidente*)
+    id_bacia_sedimentar -> BACIA_SEDIMENTAR
+    id_acidente -> ACIDENTE
+
+
+
+
+(*FID*, *id_ocorrencia*, *id_municipio*, *id_uf*, municipio, uf, id_responsavel, dt_ocorrencia, hr_ocorrencia, dt_registro, plano_emergencia, plano_emergencia_acionado, iniciados_outras_providencias, ocorrencia_oleo, dt_primeira_obs, hr_primeira_obs, informacao_geografica, informacao_responsavel, situacao_atual_descarga, nome_comunicante, nro_ocorrencia, tipo_substancia, volume_estimado, produto_nao_se_aplica, produto_perigoso, produto_nao_especificado, id_bacia_sedimentar, legado, des_instituicao_empresa, validado, tipo_comunicado, periodo_ocorrencia, periodo_primeira_obs, bacia_sedimentar, origem, tipo_evento, dt_ocorrencia_feriado, instituicoes_atuando_local, tipos_fontes_informacao, tipos_danos_identificados, produto_onu, geom, acao_inicial_tomada)
+
