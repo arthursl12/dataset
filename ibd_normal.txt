@@ -17,7 +17,11 @@
 	id_acidente -> ACIDENTE
 	id_evento -> EVENTO
 
+<<<<<<< HEAD
 #### EVENTO(*id_evento*, tipo_evento, informacao_responsavel)
+=======
+#### EVENTO(*id_evento*, tipo_evento)
+>>>>>>> parent of 1e8377c... Update ibd_normal.txt
 
 #### ACIDENTE_DANO(*id_acidente*, *id_dano*)
 	id_acidente -> ACIDENTE
