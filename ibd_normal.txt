@@ -5,6 +5,8 @@
 #### INFORMACAO(*id_informacao*, tipos_fontes_informacao)
 
 #### OCORRENCIA_INFORMACAO(*id_informacao*, *id_ocorrencia*)
+	id_informacao -> INFORMACAO
+	id_ocorrencia -> OCORRENCIA
 
 #### INSTITUICAO(*id_instituicao*, instituicoes_atuando_local, iniciados_outras_providencias)
 
@@ -23,17 +25,17 @@
 	id_acidente -> ACIDENTE
 	id_dado -> DANO
 
-#### DANO(*id_dano*, tipos_danos_identificados)
+#### DANO(*id_dano*, tipos_danos_identificados) #DONE
 
 #### ACIDENTE_ORIGEM(*id_acidente*, *id_origem*)
 	id_acidente -> ACIDENTE
 	id_origem -> ORIGEM
 
-#### ORIGEM(*id_origem*, origem)
+#### ORIGEM(*id_origem*, origem) #DONE
 
-#### UF(*id_uf*, uf)
+#### UF(*id_uf*, uf) #DONE
 
-#### MUNICIPIO(*id_municipio*, municipio, geom, id_uf)
+#### MUNICIPIO(*id_municipio*, municipio, geom, id_uf) #DONE
 	id_uf -> UF
 
-#### BACIA_SEDIMENTAR(*id_bacia_sedimentar*, bacia_sedimentar)
+#### BACIA_SEDIMENTAR(*id_bacia_sedimentar*, bacia_sedimentar) #DONE
