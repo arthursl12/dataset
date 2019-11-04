@@ -8,7 +8,7 @@
 	id_informacao -> INFORMACAO
 	id_ocorrencia -> OCORRENCIA
 
-#### INSTITUICAO(*id_instituicao*, instituicoes_atuando_local, iniciados_outras_providencias)
+#### INSTITUICAO(*id_instituicao*, instituicoes_atuando_locals)
 
 #### INSTITUICAO_OCORRENCIA(*id_instituicao*, *id_ocorrencia*, des_instituicao_empresa)
 
