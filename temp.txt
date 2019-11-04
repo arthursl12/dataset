@@ -1,0 +1,33 @@
+df = pd.read_sql_query("SELECT DISTINCT origem FROM mytable",conn)
+df
+
+df = pd.read_sql_query("SELECT origem FROM mytable WHERE origem NOT NULL", conn)
+set_ = {""}
+corte = 0
+for k in range(df.size):
+  string = df['origem'].values[k]
+  for i in range (len(string)):
+      if (string[i] == ',' or string[i] == ';'):
+        palavra = string[corte:i]
+        set_.add(palavra)
+        i+=1
+        corte = i
+  palavra = string[corte:]
+  corte = 0;
+  set_.add(palavra)
+
+set_.remove("")
+set_
+
+df = pd.DataFrame(set_)
+#cursor.execute("DROP TABLE Origem")
+#cursor.execute("DROP TABLE Origem_temp")
+df.to_sql(name="Origem", con=conn)
+df_sql = pd.read_sql('select * from Origem', conn)
+
+cursor.execute("ALTER TABLE Origem RENAME TO Origem_temp")
+cursor.execute("CREATE TABLE Origem (id_Origem INTEGER PRIMARY KEY, origem VARCHAR);")
+cursor.execute("INSERT INTO Origem (id_Origem, origem) SELECT * FROM Origem_temp")
+df_origem = pd.read_sql_query("SELECT * FROM Origem", conn)
+
+df_origem
