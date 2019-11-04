@@ -1,4 +1,4 @@
-OCORRENCIA(*id_ocorrencia*, dt_ocorrencia, hr_ocorrencia, nro_ocorrencia, periodo_ocorrencia, dt_ocorrencia_feriado, dt_registro, nome_comunicante, iniciados_outras_providencias, dt_primeira_obs, hr_primeira_obs, periodo_primeira_obs, validado, tipo_comunicado, id_municipio, id_responsavel, id_acidente)
+#### OCORRENCIA(*id_ocorrencia*, dt_ocorrencia, hr_ocorrencia, nro_ocorrencia, periodo_ocorrencia, dt_ocorrencia_feriado, dt_registro, nome_comunicante, iniciados_outras_providencias, dt_primeira_obs, hr_primeira_obs, periodo_primeira_obs, validado, tipo_comunicado, id_municipio, id_responsavel, id_acidente)
 	id_municipio -> MUNICIPIO
 	id_acidente -> ACIDENTE
 
@@ -6,20 +6,12 @@ OCORRENCIA(*id_ocorrencia*, dt_ocorrencia, hr_ocorrencia, nro_ocorrencia, period
 
 #### OCORRENCIA_INFORMACAO(*id_informacao*, *id_ocorrencia*)
 
-PLANO_EMERGENCIA(*id_emergencia*, plano_emergencia_acionado, id_acidente)
-	id_acidente -> ACIDENTE
-
 #### INSTITUICAO(*id_instituicao*, instituicoes_atuando_local)
 
 #### INSTITUICAO_OCORRENCIA(*id_instituicao*, *id_ocorrencia*, des_instituicao_empresa)
 
-ACIDENTE(*id_acidente*, tipo_substancia, acao_inicial_tomada, ocorrencia_oleo, volume_estimado, legado)
-
-ACIDENTE_PRODUTO(*id_acidente*, *id_produto*)
-	id_acidente -> ACIDENTE
-	id_produto -> PRODUTO
-
-PRODUTO(*id_produto*, produto_nao_se_aplica, produto_perigoso, produto_nao_especificado)
+#### ACIDENTE(*id_acidente*, tipo_substancia, ocorrencia_oleo, volume_estimado, legado, id_bacia_sedimentar)
+	id_bacia_sedimentar -> BACIA_SEDIMENTAR
 
 #### ACIDENTE_EVENTO(*id_acidente*, *id_evento*)
 	id_acidente -> ACIDENTE
@@ -39,13 +31,9 @@ PRODUTO(*id_produto*, produto_nao_se_aplica, produto_perigoso, produto_nao_espec
 
 #### ORIGEM(*id_origem*, origem)
 
-UF(*id_uf*, uf)
+#### UF(*id_uf*, uf)
 
-MUNICIPIO(*id_municipio*, municipio, geom, id_uf)
+#### MUNICIPIO(*id_municipio*, municipio, geom, id_uf)
 	id_uf -> UF
 
-BACIA_SEDIMENTAR(*id_bacia_sedimentar*, bacia_sedimentar)
-
-ACIDENTE_BACIA(*id_bacia_sedimentar*, *id_acidente*, informacao_geografica, situacao_atual_descarga)
-	id_bacia_sedimentar -> BACIA_SEDIMENTAR
-	id_acidente -> ACIDENTE
+#### BACIA_SEDIMENTAR(*id_bacia_sedimentar*, bacia_sedimentar)
