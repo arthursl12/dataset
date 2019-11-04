@@ -2,11 +2,13 @@
 	id_municipio -> MUNICIPIO
 	id_acidente -> ACIDENTE
 
-#### INFORMACAO(*id_informacao*, tipos_fontes_informacao)
+#### INFORMACAO(*id_informacao*, tipos_fontes_informacao) #DONE
 
 #### OCORRENCIA_INFORMACAO(*id_informacao*, *id_ocorrencia*)
+	id_informacao -> INFORMACAO
+	id_ocorrencia -> OCORRENCIA
 
-#### INSTITUICAO(*id_instituicao*, instituicoes_atuando_local)
+#### INSTITUICAO(*id_instituicao*, instituicoes_atuando_locals)
 
 #### INSTITUICAO_OCORRENCIA(*id_instituicao*, *id_ocorrencia*, des_instituicao_empresa)
 
@@ -17,27 +19,23 @@
 	id_acidente -> ACIDENTE
 	id_evento -> EVENTO
 
-<<<<<<< HEAD
-#### EVENTO(*id_evento*, tipo_evento, informacao_responsavel)
-=======
-#### EVENTO(*id_evento*, tipo_evento)
->>>>>>> parent of 1e8377c... Update ibd_normal.txt
+#### EVENTO(*id_evento*, tipo_evento) #Evento
 
 #### ACIDENTE_DANO(*id_acidente*, *id_dano*)
 	id_acidente -> ACIDENTE
 	id_dado -> DANO
 
-#### DANO(*id_dano*, tipos_danos_identificados)
+#### DANO(*id_dano*, tipos_danos_identificados) #DONE
 
 #### ACIDENTE_ORIGEM(*id_acidente*, *id_origem*)
 	id_acidente -> ACIDENTE
 	id_origem -> ORIGEM
 
-#### ORIGEM(*id_origem*, origem)
+#### ORIGEM(*id_origem*, origem) #DONE
 
-#### UF(*id_uf*, uf)
+#### UF(*id_uf*, uf) #DONE
 
-#### MUNICIPIO(*id_municipio*, municipio, geom, id_uf)
+#### MUNICIPIO(*id_municipio*, municipio, geom, id_uf) #DONE
 	id_uf -> UF
 
-#### BACIA_SEDIMENTAR(*id_bacia_sedimentar*, bacia_sedimentar)
+#### BACIA_SEDIMENTAR(*id_bacia_sedimentar*, bacia_sedimentar) #DONE
