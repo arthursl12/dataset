@@ -1,11 +1,11 @@
-df = pd.read_sql_query("SELECT DISTINCT origem FROM mytable",conn)
+df = pd.read_sql_query("SELECT DISTINCT tipo_evento FROM mytable", conn)
 df
 
-df = pd.read_sql_query("SELECT origem FROM mytable WHERE origem NOT NULL", conn)
+df = pd.read_sql_query("SELECT tipo_evento FROM mytable WHERE tipo_evento NOT NULL", conn)
 set_ = {""}
 corte = 0
 for k in range(df.size):
-  string = df['origem'].values[k]
+  string = df['tipo_evento'].values[k]
   for i in range (len(string)):
       if (string[i] == ',' or string[i] == ';'):
         palavra = string[corte:i]
@@ -20,14 +20,14 @@ set_.remove("")
 set_
 
 df = pd.DataFrame(set_)
-#cursor.execute("DROP TABLE Origem")
-#cursor.execute("DROP TABLE Origem_temp")
-df.to_sql(name="Origem", con=conn)
-df_sql = pd.read_sql('select * from Origem', conn)
+cursor.execute("DROP TABLE Evento")
+cursor.execute("DROP TABLE Evento_temp")
+df.to_sql(name="Evento", con=conn)
+df_sql = pd.read_sql('select * from Evento', conn)
 
-cursor.execute("ALTER TABLE Origem RENAME TO Origem_temp")
-cursor.execute("CREATE TABLE Origem (id_Origem INTEGER PRIMARY KEY, origem VARCHAR);")
-cursor.execute("INSERT INTO Origem (id_Origem, origem) SELECT * FROM Origem_temp")
-df_origem = pd.read_sql_query("SELECT * FROM Origem", conn)
+cursor.execute("ALTER TABLE Evento RENAME TO Evento_temp")
+cursor.execute("CREATE TABLE Evento (id_Evento INTEGER PRIMARY KEY, Evento VARCHAR);")
+cursor.execute("INSERT INTO Evento (id_Evento, Evento) SELECT * FROM Evento_temp")
+df_evento = pd.read_sql_query("SELECT * FROM Evento", conn)
 
-df_origem
+df_evento
