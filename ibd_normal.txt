@@ -8,7 +8,7 @@
 	id_informacao -> INFORMACAO
 	id_ocorrencia -> OCORRENCIA
 
-#### INSTITUICAO(*id_instituicao*, instituicoes_atuando_locals)
+#### INSTITUICAO(*id_instituicao*, instituicoes_atuando_locals) #DONE
 
 #### INSTITUICAO_OCORRENCIA(*id_instituicao*, *id_ocorrencia*, des_instituicao_empresa)
 
