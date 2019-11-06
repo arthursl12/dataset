@@ -1,61 +1,88 @@
-### Conjunto de Danos com os índices certos
-df = pd.read_sql_query("SELECT tipo_evento FROM mytable WHERE tipo_evento NOT NULL", conn)
-set_ = {""}
-corte = 0
-for k in range(df.size):
-  string = df['tipo_evento'].values[k]
-  for i in range (len(string)):
-      if (string[i] == ',' or string[i] == ';'):
-        palavra = string[corte:i]
-        set_.add(palavra)
-        i+=1
-        corte = i
-  palavra = string[corte:]
-  corte = 0;
-  set_.add(palavra)
+Titulo: (1)
+Uma análise dos Acidentes Ambientais comunicados no Brasil
 
-set_.remove("")
-eventos = pd.DataFrame(set_)
-eventos['tipo_evento'] = eventos[0]
-eventos = eventos.drop(columns=0)
-eventos['id_Evento'] = [x for x in range(0, len(eventos.values))]
-eventos = eventos[['id_Evento','tipo_evento']]
+Membros: (2)
+Paulo Henrique Maciel Fraga - 2018054451
+Roberto Gomes Rosmaninho Neto - 2018054940
+Arthur Souto Lima - 2018055113 
+Gabriel Lima - 2017103068
 
-### Slicing dos dados
-acidente_evento = pd.read_sql_query("SELECT tipo_substancia, ocorrencia_oleo, volume_estimado, legado, id_bacia_sedimentar, tipo_evento "+
-                                  "FROM mytable", conn)
-acidente_evento['id_Acidente'] = [x for x in range(0, len(acidente_evento.values))]
-acidente_evento = acidente_evento.dropna(subset=['tipo_evento'])
-acidente_evento = acidente_evento[['id_Acidente','tipo_substancia', 'ocorrencia_oleo', 'volume_estimado', 'legado', 'id_bacia_sedimentar', 'tipo_evento']]
+Descrição dos dados: (3)
+Inicialmente, os dados estavam dispostos na forma de uma tabela única com os seguintes atributos:
 
-### Quebra dos multivalorados
-new_df = pd.DataFrame(acidente_evento.tipo_evento.str.split(';').tolist(), index=acidente_evento.id_Acidente).stack()
-new_df = new_df.reset_index([0, 'id_Acidente'])
-new_df.columns = ['id_Acidente', 'tipo_evento']
+	(FID, id_ocorrencia, id_municipio, id_uf, municipio, uf, id_responsavel, dt_ocorrencia, hr_ocorrencia, dt_registro, plano_emergencia, plano_emergencia_acionado, iniciados_outras_providencias, ocorrencia_oleo, dt_primeira_obs, hr_primeira_obs, informacao_geografica, informacao_responsavel, situacao_atual_descarga, nome_comunicante, nro_ocorrencia, tipo_substancia, volume_estimado, produto_nao_se_aplica, produto_perigoso, produto_nao_especificado, id_bacia_sedimentar, legado, des_instituicao_empresa, validado, tipo_comunicado, periodo_ocorrencia, periodo_primeira_obs, bacia_sedimentar, origem, tipo_evento, dt_ocorrencia_feriado, instituicoes_atuando_local, tipos_fontes_informacao, tipos_danos_identificados, produto_onu, geom, acao_inicial_tomada)
 
-### Conversão do 'tipo_evento' em 'id_Evento'
-evento_list = eventos['tipo_evento'].tolist()
-id_Evento_list = []
+A tabela contém cerca de 10 mil linhas. Nelas estão contidas dados da comunicação de acidentes ambientais brasileiros de 2009 até 2019. Devido ao grande período de tempo que a tabela engloba, diversas colunas possuem valores nulos, havendo uma discrepância muito grande dos dados mais atuais em relação ao antigos no que diz respeito a espaços nulos. Além disso, diversos atributos estavam no formato de strings com entrada livre, o que dificultou muito a pesquisa de dados dentro das tabelas. Assim, enxugamos alguns atributos que não seriam relevantes para as pesquisas, e os atributos finais passaram a ser:
 
-for index_label, row_series in new_df.iterrows():
-   evento_nome = new_df.at[index_label , 'tipo_evento']
-   evento_id = evento_list.index(evento_nome)
-   id_Evento_list.append(evento_id)
+	(FID,id_ocorrencia, dt_ocorrencia, hr_ocorrencia, nro_ocorrencia, periodo_ocorrencia, dt_ocorrencia_feriado, dt_registro, nome_comunicante, iniciados_outras_providencias, dt_primeira_obs, hr_primeira_obs, periodo_primeira_obs, validado, tipo_comunicado, id_municipio, id_responsavel,tipos_fontes_informacao,instituicoes_atuando_local,des_instituicao_empresa, tipo_substancia, ocorrencia_oleo, volume_estimado, legado, id_bacia_sedimentar,tipo_evento,tipos_danos_identificados,origem,id_uf, uf, municipio, geo, bacia_sedimentar, situacao_atual_descarga)
 
-new_df['id_Evento'] = id_Evento_list
-new_df = new_df.drop(columns='tipo_evento')
+A partir das colunas chaves selecionadas, foi realizada a normalização até que chegamos ao esquema relacional na 3NF abaixo (ver diagrama relacional).
 
-### Conversão do dataframe em SQL
-cursor.execute("DROP TABLE IF EXISTS Acidente_Evento")
-cursor.execute("DROP TABLE IF EXISTS A_E_tmp")
-new_df.to_sql(name="Acidente_Evento", con=conn)
-cursor.execute("ALTER TABLE Acidente_Evento RENAME TO A_E_tmp;")
-cursor.execute("CREATE TABLE IF NOT EXISTS Acidente_Evento (id_Acidente INTEGER, id_Evento INTEGER, "+
-               "FOREIGN KEY(id_Acidente) REFERENCES Acidente(id_Acidente), FOREIGN KEY(id_Evento) REFERENCES Evento(id_Evento), "+
-               "PRIMARY KEY(id_Acidente,id_Evento));")
-cursor.execute("INSERT INTO Acidente_Evento(id_Acidente, id_Evento) SELECT id_Acidente,id_Evento FROM A_E_tmp;")
-cursor.execute("DROP TABLE IF EXISTS A_E_tmp")
+Para que chegássemos nessa normalização, foi necessária a manipulação de algumas colunas, em formato de string, que eram muitivaloradas. Para isso, usamos um script em Python que separava os strings baseados nos critérios de separação que foram observados nas colunas da tabela. Por exemplo, a coluna abaixo representava um atributo muitivalorado e foi tratada para o seguinte formato:
 
-### Verificação
-data_sql = pd.read_sql("SELECT * FROM Acidente_Evento", conn)
-data_sql
+	Antes:
+ 	'Órgão Estadual ou Municipal de Meio Ambiente;Outra(s);Polícia Civil;Polícia Militar',
+
+ 	Depois:
+	 	Órgão Estadual ou Municipal de Meio Ambiente
+	 	Outra(s)
+	 	Polícia Civil
+	 	Polícia Militar
+
+A partir dessa manipulação, geramos tabelas próprias e criamos IDs próprios para uma parcela significativa dos dados multivalorados presentes na tabela, além de gerar relacionamentos que conectavam as IDs geradas com as já existentes. Utilizamos esse processo pois, por se tratar de uma tabela com inúmeros valores nulos, acreditamos que a manipulação dos dados multivalorados gerariam informações valiosas para a realização das consultas e compreensão dos dados.
+
+Diagrama ER: (4)
+< DIAGRAMA AQUI >
+
+Diagrama Relacional: (5)
+
+#### OCORRENCIA(id_ocorrencia, dt_ocorrencia, hr_ocorrencia, nro_ocorrencia, periodo_ocorrencia, dt_ocorrencia_feriado, dt_registro, nome_comunicante, iniciados_outras_providencias, dt_primeira_obs, hr_primeira_obs, periodo_primeira_obs, validado, tipo_comunicado, id_municipio, id_responsavel, id_acidente)
+	id_municipio -> MUNICIPIO
+	id_acidente -> ACIDENTE
+
+#### INFORMACAO(id_informacao, tipos_fontes_informacao)
+
+#### OCORRENCIA_INFORMACAO(id_informacao, id_ocorrencia)
+	id_informacao -> INFORMACAO
+	id_ocorrencia -> OCORRENCIA
+
+#### INSTITUICAO(id_instituicao, instituicoes_atuando_local)
+
+#### INSTITUICAO_OCORRENCIA(id_instituicao, id_ocorrencia, des_instituicao_empresa)
+	id_instituicao -> INSTITUICAO
+	id_ocorrencia -> OCORRENCIA
+
+#### ACIDENTE(id_acidente, tipo_substancia, ocorrencia_oleo, volume_estimado, legado, id_bacia_sedimentar)
+	id_bacia_sedimentar -> BACIA_SEDIMENTAR
+
+#### ACIDENTE_EVENTO(id_acidente, id_evento)
+	id_acidente -> ACIDENTE
+	id_evento -> EVENTO
+
+#### EVENTO(id_evento, tipo_evento)
+
+#### ACIDENTE_DANO(id_acidente, id_dano)
+	id_acidente -> ACIDENTE
+	id_dado -> DANO
+
+#### DANO(id_dano, tipos_danos_identificados)
+
+#### ACIDENTE_ORIGEM(id_acidente, id_origem)
+	id_acidente -> ACIDENTE
+	id_origem -> ORIGEM
+
+#### ORIGEM(id_origem, origem)
+
+#### UF(id_uf, uf)
+
+#### MUNICIPIO(id_municipio, municipio, geom, id_uf)
+	id_uf -> UF
+
+#### BACIA_SEDIMENTAR(id_bacia_sedimentar, bacia_sedimentar, situacao_atual_descarga)
+
+Consultas: (6)
+TEMO QUE FAZER AINDa
+
+Auto avaliação: (7)
+Todos os membros participaram igualmente no desenvolvimento do trabalho, cada qual realizando uma porção das tarefas que foi divida em pelo grupo.
+
