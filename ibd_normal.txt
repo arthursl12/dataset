@@ -21,7 +21,7 @@
 
 #### EVENTO(*id_evento*, tipo_evento) #DONE
 
-#### ACIDENTE_DANO(*id_acidente*, *id_dano*)
+#### ACIDENTE_DANO(*id_acidente*, *id_dano*) #DONE
 	id_acidente -> ACIDENTE
 	id_dado -> DANO
 
