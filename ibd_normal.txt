@@ -15,7 +15,7 @@
 #### ACIDENTE(*id_acidente*, tipo_substancia, ocorrencia_oleo, volume_estimado, legado, id_bacia_sedimentar) #DONE
 	id_bacia_sedimentar -> BACIA_SEDIMENTAR
 
-#### ACIDENTE_EVENTO(*id_acidente*, *id_evento*)
+#### ACIDENTE_EVENTO(*id_acidente*, *id_evento*) #DONE
 	id_acidente -> ACIDENTE
 	id_evento -> EVENTO
 
