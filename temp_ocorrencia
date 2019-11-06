@@ -1,0 +1,77 @@
+import numpy as np
+import math
+import random
+
+# #### OCORRENCIA(*id_ocorrencia*, dt_ocorrencia, hr_ocorrencia, nro_ocorrencia, periodo_ocorrencia, dt_ocorrencia_feriado, dt_registro, nome_comunicante,
+# iniciados_outras_providencias, dt_primeira_obs, hr_primeira_obs, periodo_primeira_obs, validado, tipo_comunicado, id_municipio, id_acidente)
+#   id_municipio -> MUNICIPIO
+#   id_acidente -> ACIDENTE
+
+### Slicing dos dados
+ocorrencia = pd.read_sql_query("SELECT dt_ocorrencia, hr_ocorrencia, nro_ocorrencia, periodo_ocorrencia, dt_registro, nome_comunicante "+
+                               "iniciados_outras_providencias, dt_primeira_obs, hr_primeira_obs, periodo_primeira_obs, validado, tipo_comunicado, "+
+                               "id_municipio, tipo_substancia, ocorrencia_oleo, volume_estimado, legado, id_bacia_sedimentar "
+                               "FROM mytable", conn)
+ocorrencia['id_Correncia'] = [x for x in range(0, len(ocorrencia.values))]
+ocorrencia
+
+### Transformar a tupla do Acidente em 'id_Acidente'
+acidente = pd.read_sql_query("SELECT * FROM Acidente",conn)
+acidentes_tuples = []
+
+for row in ocorrencia.itertuples():
+    # print(row)
+    ac_tuple = (row.tipo_substancia,row.ocorrencia_oleo, row.volume_estimado, row.legado , row.id_bacia_sedimentar)
+    acidentes_tuples.append(ac_tuple)
+    # print(ac_tuple)
+
+
+data_ac_id = []
+tuple_ = random.sample(acidentes_tuples, k)
+i = 0
+
+# for tuple_ in acidentes_tuples:
+ts = tuple_[0] is None
+# oo_bool = tuisnan(ac_tuple[1])
+ve_bool = math.isnan(tuple_[2])
+# le_bool = math.isnan(ac_tuple[3])
+bs_bool = math.isnan(tuple_[4])
+
+
+# if (bs_bool):
+#   expr = (acidente['tipo_substancia'] == tuple_[0]) & \
+#         (acidente['ocorrencia_oleo'] == tuple_[1]) & \
+#         (acidente['volume_estimado'] == tuple_[2]) & \
+#         (acidente['legado'] == tuple_[3])
+# elif (ve_bool):
+#   expr = (acidente['tipo_substancia'] == tuple_[0]) & \
+#     (acidente['ocorrencia_oleo'] == tuple_[1]) & \
+#     (acidente['legado'] == tuple_[3]) & \
+#     (acidente['legado'] == tuple_[4])
+# elif (ts_bool):
+#   expr = (acidente['ocorrencia_oleo'] == tuple_[1]) & \
+#     (acidente['volume_estimado'] == tuple_[2]) & \
+#     (acidente['legado'] == tuple_[3]) & \
+#     (acidente['legado'] == tuple_[4])
+# else:
+#   expr = (acidente['tipo_substancia'] == tuple_[0]) & \
+#     (acidente['ocorrencia_oleo'] == tuple_[1]) & \
+#     (acidente['volume_estimado'] == tuple_[2]) & \
+#     (acidente['legado'] == tuple_[3]) & \
+#     (acidente['legado'] == tuple_[4])
+
+
+# # print(acidente.loc[expr])
+# ac_id_list = acidente.loc[expr]['id_acidente'].tolist()
+# if (len(ac_id_list) == 0):
+#   print(tuple_)
+#   i += 1
+#   continue
+# ac_id = ac_id_list[0]
+# data_ac_id.append(ac_id)
+
+# i += 1
+# if (i >= 15): 
+#   break
+
+# print(data_ac_id)
