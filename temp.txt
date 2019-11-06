@@ -1,6 +1,4 @@
-df = pd.read_sql_query("SELECT DISTINCT tipo_evento FROM mytable", conn)
-df
-
+### Conjunto de Danos com os índices certos
 df = pd.read_sql_query("SELECT tipo_evento FROM mytable WHERE tipo_evento NOT NULL", conn)
 set_ = {""}
 corte = 0
@@ -17,17 +15,47 @@ for k in range(df.size):
   set_.add(palavra)
 
 set_.remove("")
-set_
+eventos = pd.DataFrame(set_)
+eventos['tipo_evento'] = eventos[0]
+eventos = eventos.drop(columns=0)
+eventos['id_Evento'] = [x for x in range(0, len(eventos.values))]
+eventos = eventos[['id_Evento','tipo_evento']]
 
-df = pd.DataFrame(set_)
-cursor.execute("DROP TABLE Evento")
-cursor.execute("DROP TABLE Evento_temp")
-df.to_sql(name="Evento", con=conn)
-df_sql = pd.read_sql('select * from Evento', conn)
+### Slicing dos dados
+acidente_evento = pd.read_sql_query("SELECT tipo_substancia, ocorrencia_oleo, volume_estimado, legado, id_bacia_sedimentar, tipo_evento "+
+                                  "FROM mytable", conn)
+acidente_evento['id_Acidente'] = [x for x in range(0, len(acidente_evento.values))]
+acidente_evento = acidente_evento.dropna(subset=['tipo_evento'])
+acidente_evento = acidente_evento[['id_Acidente','tipo_substancia', 'ocorrencia_oleo', 'volume_estimado', 'legado', 'id_bacia_sedimentar', 'tipo_evento']]
 
-cursor.execute("ALTER TABLE Evento RENAME TO Evento_temp")
-cursor.execute("CREATE TABLE Evento (id_Evento INTEGER PRIMARY KEY, Evento VARCHAR);")
-cursor.execute("INSERT INTO Evento (id_Evento, Evento) SELECT * FROM Evento_temp")
-df_evento = pd.read_sql_query("SELECT * FROM Evento", conn)
+### Quebra dos multivalorados
+new_df = pd.DataFrame(acidente_evento.tipo_evento.str.split(';').tolist(), index=acidente_evento.id_Acidente).stack()
+new_df = new_df.reset_index([0, 'id_Acidente'])
+new_df.columns = ['id_Acidente', 'tipo_evento']
 
-df_evento
+### Conversão do 'tipo_evento' em 'id_Evento'
+evento_list = eventos['tipo_evento'].tolist()
+id_Evento_list = []
+
+for index_label, row_series in new_df.iterrows():
+   evento_nome = new_df.at[index_label , 'tipo_evento']
+   evento_id = evento_list.index(evento_nome)
+   id_Evento_list.append(evento_id)
+
+new_df['id_Evento'] = id_Evento_list
+new_df = new_df.drop(columns='tipo_evento')
+
+### Conversão do dataframe em SQL
+cursor.execute("DROP TABLE IF EXISTS Acidente_Evento")
+cursor.execute("DROP TABLE IF EXISTS A_E_tmp")
+new_df.to_sql(name="Acidente_Evento", con=conn)
+cursor.execute("ALTER TABLE Acidente_Evento RENAME TO A_E_tmp;")
+cursor.execute("CREATE TABLE IF NOT EXISTS Acidente_Evento (id_Acidente INTEGER, id_Evento INTEGER, "+
+               "FOREIGN KEY(id_Acidente) REFERENCES Acidente(id_Acidente), FOREIGN KEY(id_Evento) REFERENCES Evento(id_Evento), "+
+               "PRIMARY KEY(id_Acidente,id_Evento));")
+cursor.execute("INSERT INTO Acidente_Evento(id_Acidente, id_Evento) SELECT id_Acidente,id_Evento FROM A_E_tmp;")
+cursor.execute("DROP TABLE IF EXISTS A_E_tmp")
+
+### Verificação
+data_sql = pd.read_sql("SELECT * FROM Acidente_Evento", conn)
+data_sql
