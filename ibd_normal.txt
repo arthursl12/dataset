@@ -4,7 +4,7 @@
 
 #### INFORMACAO(*id_informacao*, tipos_fontes_informacao) #DONE
 
-#### OCORRENCIA_INFORMACAO(*id_informacao*, *id_ocorrencia*)
+#### OCORRENCIA_INFORMACAO(*id_informacao*, *id_ocorrencia*) #DONE
 	id_informacao -> INFORMACAO
 	id_ocorrencia -> OCORRENCIA
 
