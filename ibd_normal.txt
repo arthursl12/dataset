@@ -10,7 +10,7 @@
 
 #### INSTITUICAO(*id_instituicao*, instituicoes_atuando_locals) #DONE
 
-#### INSTITUICAO_OCORRENCIA(*id_instituicao*, *id_ocorrencia*, des_instituicao_empresa)
+#### INSTITUICAO_OCORRENCIA(*id_instituicao*, *id_ocorrencia*) #DONE
 
 #### ACIDENTE(*id_acidente*, tipo_substancia, ocorrencia_oleo, volume_estimado, legado, id_bacia_sedimentar) #DONE
 	id_bacia_sedimentar -> BACIA_SEDIMENTAR
