@@ -1,4 +1,4 @@
-#### OCORRENCIA(*id_ocorrencia*, dt_ocorrencia, hr_ocorrencia, nro_ocorrencia, periodo_ocorrencia, dt_ocorrencia_feriado, dt_registro, nome_comunicante, iniciados_outras_providencias, dt_primeira_obs, hr_primeira_obs, periodo_primeira_obs, validado, tipo_comunicado, id_municipio, id_acidente)
+#### OCORRENCIA(*id_ocorrencia*, dt_ocorrencia, hr_ocorrencia, nro_ocorrencia, periodo_ocorrencia, dt_ocorrencia_feriado, dt_registro, nome_comunicante, iniciados_outras_providencias, dt_primeira_obs, hr_primeira_obs, periodo_primeira_obs, validado, tipo_comunicado, id_municipio, id_acidente) #DONE
 	id_municipio -> MUNICIPIO
 	id_acidente -> ACIDENTE
 
